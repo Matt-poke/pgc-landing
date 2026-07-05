@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poké Global Collect — Gère ta collection TCG comme un pro</title>
+  <meta name="description" content="Suis tes cartes Pokémon, découvre leur valeur en temps réel, scanne-les en un instant et partage ta collection avec tes amis." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #1E90FF;
+      --red: #CC2200;
+      --gold: #F5A623;
+      --bg: #060810;
+      --surface: rgba(14,18,32,0.92);
+      --surface2: rgba(20,26,44,0.85);
+      --border: rgba(30,144,255,0.18);
+      --text: #F0F4FF;
+      --text-2: #8A9BC0;
+      --text-3: #4A5880;
+      --green: #2ECC71;
+      --radius: 12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Fond spatial fixe */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 70% 60%, rgba(30,144,255,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 30% 40%, rgba(204,34,0,0.05) 0%, transparent 55%),
+        url('terre.jpg') center/cover no-repeat;
+      z-index: -2;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(6,8,16,0.88) 0%, rgba(6,8,16,0.75) 40%, rgba(6,8,16,0.92) 100%);
+      z-index: -1;
+    }
+
+    /* ── NAV ─────────────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 60px;
+      background: rgba(6,8,16,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 0.5px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 17px;
+      text-decoration: none;
+    }
+    .nav-logo img { width: 32px; height: 32px; }
+    .nav-logo .blue { color: var(--blue); }
+    .nav-logo .white { color: #fff; }
+    .nav-logo .red { color: var(--red); }
+
+    .nav-links { display: flex; align-items: center; gap: 2rem; }
+    .nav-links a {
+      color: var(--text-2); text-decoration: none; font-size: 14px;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .btn-beta {
+      background: linear-gradient(135deg, var(--blue), #1565C0);
+      color: #fff; border: none; border-radius: 8px;
+      padding: 8px 20px; font-size: 13px; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: opacity 0.2s, transform 0.1s;
+      display: inline-flex; align-items: center; gap: 6px;
+      box-shadow: 0 4px 16px rgba(30,144,255,0.3);
+    }
+    .btn-beta:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* ── HERO ────────────────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 100px 2rem 4rem;
+      max-width: 1200px; margin: 0 auto;
+      gap: 4rem;
+    }
+    .hero-left { flex: 1; min-width: 0; }
+    .hero-right { width: 420px; flex-shrink: 0; }
+
+    .badge-beta {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(30,144,255,0.1);
+      border: 0.5px solid rgba(30,144,255,0.35);
+      border-radius: 40px; padding: 6px 16px;
+      font-size: 12px; color: var(--blue); font-weight: 500;
+      margin-bottom: 28px;
+    }
+    .badge-beta::before {
+      content: '';
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--blue);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(30,144,255,0.4); }
+      50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(30,144,255,0); }
+    }
+
+    .hero-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: -0.5px;
+    }
+    .hero-title .accent-blue { color: var(--blue); }
+    .hero-title .accent-red { color: var(--red); }
+
+    .hero-sub {
+      font-size: 17px; color: var(--text-2); line-height: 1.7;
+      margin-bottom: 36px; max-width: 520px;
+    }
+
+    .hero-tags {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 40px;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(20,26,44,0.8); border: 0.5px solid var(--border);
+      border-radius: 20px; padding: 6px 14px; font-size: 13px; color: var(--text-2);
+    }
+    .hero-tag .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+
+    .hero-stats {
+      display: flex; gap: 32px;
+    }
+    .hero-stat .num {
+      font-family: 'Orbitron', monospace; font-size: 28px; font-weight: 700;
+      color: var(--text);
+    }
+    .hero-stat .label { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+
+    /* Carte waitlist */
+    .waitlist-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    }
+    .waitlist-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 12px;
+    }
+    .waitlist-title {
+      font-size: 22px; font-weight: 700; color: var(--text);
+      margin-bottom: 10px; line-height: 1.3;
+    }
+    .waitlist-sub { font-size: 13px; color: var(--text-2); margin-bottom: 20px; line-height: 1.6; }
+
+    .waitlist-form { display: flex; flex-direction: column; gap: 10px; }
+    .waitlist-form label { font-size: 12px; color: var(--text-2); }
+    .waitlist-input {
+      width: 100%; height: 46px;
+      background: rgba(10,14,26,0.8);
+      border: 0.5px solid rgba(30,144,255,0.3);
+      border-radius: 10px; padding: 0 14px;
+      color: var(--text); font-size: 14px; font-family: 'Inter', sans-serif;
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .waitlist-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(30,144,255,0.1);
+    }
+    .waitlist-input::placeholder { color: var(--text-3); }
+
+    /* Honeypot */
+    .hp-field { display: none; }
+
+    .btn-waitlist {
+      width: 100%; height: 50px;
+      background: var(--gold);
+      color: #000; font-size: 15px; font-weight: 700;
+      border: none; border-radius: 10px; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: opacity 0.2s, transform 0.1s;
+      box-shadow: 0 4px 20px rgba(245,166,35,0.35);
+    }
+    .btn-waitlist:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-waitlist:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .waitlist-note {
+      font-size: 11px; color: var(--text-3); text-align: center; margin-top: 6px;
+    }
+
+    .waitlist-access {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(10,14,26,0.6); border: 0.5px solid var(--border);
+      border-radius: 10px; padding: 10px 14px;
+      font-size: 12px; color: var(--text-2); margin-top: 12px;
+    }
+
+    .toast-success {
+      display: none; background: rgba(46,204,113,0.15);
+      border: 0.5px solid rgba(46,204,113,0.4);
+      border-radius: 10px; padding: 14px;
+      text-align: center; color: var(--green);
+      font-size: 14px; font-weight: 500;
+    }
+    .toast-error {
+      display: none; background: rgba(231,76,60,0.15);
+      border: 0.5px solid rgba(231,76,60,0.4);
+      border-radius: 10px; padding: 14px;
+      text-align: center; color: #E74C3C;
+      font-size: 14px;
+    }
+
+    /* ── SECTIONS COMMUNES ───────────────────────────────────────────────── */
+    section {
+      max-width: 1200px; margin: 0 auto;
+      padding: 100px 2rem;
+    }
+    .section-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--blue); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-eyebrow::before {
+      content: ''; width: 24px; height: 1px; background: var(--blue);
+    }
+    .section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(26px, 3.5vw, 42px);
+      font-weight: 700; line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 16px; color: var(--text-2); line-height: 1.7;
+      max-width: 600px; margin-bottom: 60px;
+    }
+
+    /* ── FEATURES GRID ───────────────────────────────────────────────────── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .feature-card:hover {
+      border-color: rgba(30,144,255,0.4);
+      transform: translateY(-3px);
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue), transparent);
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: rgba(30,144,255,0.12);
+      border: 0.5px solid rgba(30,144,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 16px;
+    }
+    .feature-badge {
+      position: absolute; top: 16px; right: 16px;
+      background: rgba(30,144,255,0.15); color: var(--blue);
+      font-size: 10px; font-weight: 700; padding: 3px 8px;
+      border-radius: 20px; border: 0.5px solid rgba(30,144,255,0.3);
+    }
+    .feature-title {
+      font-size: 17px; font-weight: 600; color: var(--text);
+      margin-bottom: 8px;
+    }
+    .feature-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+
+    /* ── SCREENSHOTS ─────────────────────────────────────────────────────── */
+    .screenshots-section { padding: 100px 2rem; }
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .screenshot-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 0.5px solid var(--border);
+      background: var(--surface);
+      transition: transform 0.2s, border-color 0.2s;
+      cursor: pointer;
+    }
+    .screenshot-card:hover {
+      transform: scale(1.02);
+      border-color: rgba(30,144,255,0.4);
+    }
+    .screenshot-card img {
+      width: 100%; display: block;
+      aspect-ratio: 16/9; object-fit: cover; object-position: top;
+    }
+    .screenshot-label {
+      padding: 12px 16px;
+      font-size: 13px; font-weight: 500; color: var(--text-2);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .screenshot-label span {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--blue);
+    }
+    .screenshot-card.large {
+      grid-column: 1 / -1;
+    }
+
+    /* ── SCANNER SECTION ─────────────────────────────────────────────────── */
+    .scanner-section {
+      padding: 100px 2rem;
+      text-align: center;
+    }
+    .video-wrapper {
+      position: relative;
+      max-width: 860px; margin: 0 auto;
+      border-radius: 16px; overflow: hidden;
+      border: 0.5px solid var(--border);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+    }
+    .video-wrapper video {
+      width: 100%; display: block;
+    }
+    .video-overlay-badge {
+      position: absolute; top: 16px; left: 16px;
+      background: rgba(10,14,26,0.9);
+      border: 0.5px solid rgba(30,144,255,0.4);
+      border-radius: 20px; padding: 6px 14px;
+      font-size: 12px; color: var(--blue); font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .video-overlay-badge::before {
+      content: '';
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--blue);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* ── FLOW ────────────────────────────────────────────────────────────── */
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .flow-card {
+      background: var(--surface2);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      position: relative;
+    }
+    .flow-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 11px; font-weight: 700;
+      color: var(--gold); margin-bottom: 12px;
+      letter-spacing: 0.1em;
+    }
+    .flow-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .flow-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+    .flow-connector {
+      position: absolute; top: 50%; right: -8px;
+      width: 16px; height: 2px;
+      background: linear-gradient(90deg, var(--blue), transparent);
+      transform: translateY(-50%);
+    }
+
+    /* ── CTA FINAL ───────────────────────────────────────────────────────── */
+    .cta-section {
+      text-align: center;
+      padding: 80px 2rem 120px;
+    }
+    .cta-card {
+      max-width: 700px; margin: 0 auto;
+      background: var(--surface);
+      border: 0.5px solid rgba(30,144,255,0.3);
+      border-radius: 20px;
+      padding: 56px 40px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+    }
+    .cta-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(22px, 3vw, 34px);
+      font-weight: 700; margin-bottom: 16px;
+    }
+    .cta-sub { font-size: 15px; color: var(--text-2); margin-bottom: 32px; line-height: 1.7; }
+    .cta-form {
+      display: flex; gap: 10px; max-width: 480px; margin: 0 auto 12px;
+    }
+    .cta-input {
+      flex: 1; height: 50px;
+      background: rgba(10,14,26,0.8);
+      border: 0.5px solid rgba(30,144,255,0.3);
+      border-radius: 10px; padding: 0 16px;
+      color: var(--text); font-size: 14px; font-family: 'Inter', sans-serif;
+      outline: none; transition: border-color 0.2s;
+    }
+    .cta-input:focus { border-color: var(--blue); }
+    .cta-input::placeholder { color: var(--text-3); }
+    .btn-cta {
+      height: 50px; padding: 0 24px;
+      background: var(--gold); color: #000;
+      font-size: 14px; font-weight: 700;
+      border: none; border-radius: 10px; cursor: pointer;
+      font-family: 'Inter', sans-serif; white-space: nowrap;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn-cta:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-cta:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .cta-note { font-size: 12px; color: var(--text-3); }
+
+    /* ── FOOTER ──────────────────────────────────────────────────────────── */
+    footer {
+      border-top: 0.5px solid var(--border);
+      padding: 32px 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      max-width: 1200px; margin: 0 auto;
+      font-size: 13px; color: var(--text-3);
+    }
+    footer a { color: var(--text-3); text-decoration: none; }
+    footer a:hover { color: var(--text-2); }
+
+    /* ── DIVIDER ─────────────────────────────────────────────────────────── */
+    .divider {
+      height: 0.5px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      max-width: 1200px; margin: 0 auto;
+    }
+
+    /* ── SPINNER ─────────────────────────────────────────────────────────── */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero { flex-direction: column; padding-top: 80px; }
+      .hero-right { width: 100%; }
+      .screenshots-grid { grid-template-columns: 1fr; }
+      .screenshot-card.large { grid-column: 1; }
+      .flow-grid { grid-template-columns: repeat(2, 1fr); }
+      .flow-connector { display: none; }
+      .nav-links { display: none; }
+      .cta-form { flex-direction: column; }
+    }
+
+    @media (max-width: 480px) {
+      .flow-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 20px; }
+      .cta-card { padding: 36px 20px; }
+    }
+
+    /* ── ANIMATIONS SCROLL ───────────────────────────────────────────────── */
+    .fade-up {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1; transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <img src="pgc-logo.png" alt="PGC" />
+      <span>
+        <span class="blue">Poké</span>
+        <span class="white"> Global </span>
+        <span class="red">Collect</span>
+      </span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Fonctionnalités</a>
+      <a href="#scanner">Scanner</a>
+      <a href="#flow">Comment ça marche</a>
+    </div>
+    <a href="#waitlist" class="btn-beta">
+      Réserver mon accès →
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero" id="waitlist">
+    <div class="hero-left fade-up">
+      <div class="badge-beta">Bêta privée bientôt ouverte</div>
+
+      <h1 class="hero-title">
+        Ta collection TCG,<br/>
+        <span class="accent-blue">enfin</span> simple à<br/>
+        <span class="accent-red">piloter.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Suis tes cartes Pokémon FR &amp; JP, découvre leur valeur en temps réel,
+        scanne-les en un instant et partage ta collection avec tes amis.
+      </p>
+
+      <div class="hero-tags">
+        <span class="hero-tag"><span class="dot" style="background:#1E90FF"></span> Collection FR / JP</span>
+        <span class="hero-tag"><span class="dot" style="background:#F5A623"></span> Scanner IA</span>
+        <span class="hero-tag"><span class="dot" style="background:#2ECC71"></span> Prix en temps réel</span>
+        <span class="hero-tag"><span class="dot" style="background:#CC2200"></span> Marché entre collectionneurs</span>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="num">10 000+</div>
+          <div class="label">cartes référencées</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">300</div>
+          <div class="label">scans inclus</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">FR / JP</div>
+          <div class="label">langues supportées</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right fade-up" style="transition-delay:0.15s">
+      <div class="waitlist-card">
+        <div class="waitlist-eyebrow">Liste d'attente</div>
+        <div class="waitlist-title">Réserve ton accès<br/>avant le lancement.</div>
+        <div class="waitlist-sub">
+          Inscris ton email pour recevoir l'invitation bêta et les premières infos de sortie.
+          Les inscrits en avance bénéficieront d'avantages exclusifs.
+        </div>
+
+        <div id="form-hero">
+          <div class="waitlist-form">
+            <label for="email-hero">Email</label>
+            <input
+              type="email"
+              id="email-hero"
+              class="waitlist-input"
+              placeholder="dresseur@email.com"
+              required
+            />
+            <!-- Honeypot anti-bot -->
+            <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off" />
+            <button class="btn-waitlist" onclick="submitWaitlist('hero')">
+              Me prévenir →
+            </button>
+          </div>
+          <div class="waitlist-note">Aucun spam — uniquement les nouvelles du lancement et l'accès bêta.</div>
+          <div class="waitlist-access">
+            🕐 Accès bêta prévu prochainement
+          </div>
+        </div>
+
+        <div class="toast-success" id="success-hero">
+          ✅ Tu es sur la liste ! On te contacte dès l'ouverture.
+        </div>
+        <div class="toast-error" id="error-hero"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="fade-up">
+      <div class="section-eyebrow">Fonctionnalités</div>
+      <h2 class="section-title">Tout ce qu'il te faut<br/>pour collectionner sans friction.</h2>
+      <p class="section-sub">Une application pensée pour les collectionneurs exigeants — du suivi de valeur au marché entre amis.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card fade-up">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Ma Collection</div>
+        <div class="feature-desc">Gère toutes tes cartes avec leurs prix d'achat, valeur actuelle TCGPlayer &amp; CardMarket, et ton P&amp;L en temps réel.</div>
+      </div>
+      <div class="feature-card fade-up" style="transition-delay:0.1s">
+        <div class="feature-icon">🔍</div>
+        <div class="feature-badge">FR / JP</div>
+        <div class="feature-title">Explorer</div>
+        <div class="feature-desc">Parcours toutes les extensions Pokémon depuis 1999, filtre par rareté, et vois en un coup d'œil ce que tu possèdes.</div>
+      </div>
+      <div class="feature-card fade-up" style="transition-delay:0.2s">
+        <div class="feature-icon">📸</div>
+        <div class="feature-badge">IA</div>
+        <div class="feature-title">Scanner IA</div>
+        <div class="feature-desc">Prends une photo de ta carte et l'IA détecte automatiquement le nom, le set, le numéro et la langue en quelques secondes.</div>
+      </div>
+      <div class="feature-card fade-up" style="transition-delay:0.05s">
+        <div class="feature-icon">🖼️</div>
+        <div class="feature-title">Galerie</div>
+        <div class="feature-desc">Présente tes cartes en galerie visuelle avec tes propres photos. Montre ta collection sous son meilleur jour.</div>
+      </div>
+      <div class="feature-card fade-up" style="transition-delay:0.15s">
+        <div class="feature-icon">🏪</div>
+        <div class="feature-title">Marché</div>
+        <div class="feature-desc">Mets tes cartes en vente et entre en contact direct avec d'autres collectionneurs. Achète, vends, échange.</div>
+      </div>
+      <div class="feature-card fade-up" style="transition-delay:0.25s">
+        <div class="feature-icon">👥</div>
+        <div class="feature-title">Collection commune</div>
+        <div class="feature-desc">Connecte-toi avec tes amis et visualisez vos collections réunies. Savoir qui a quoi, c'est simple.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SCREENSHOTS -->
+  <section class="screenshots-section">
+    <div class="fade-up" style="max-width:1200px; margin:0 auto 50px;">
+      <div class="section-eyebrow">Aperçu</div>
+      <h2 class="section-title">L'app en images.</h2>
+      <p class="section-sub">Une interface sombre et immersive, pensée pour les collectionneurs sérieux.</p>
+    </div>
+
+    <div class="screenshots-grid" style="max-width:1200px;margin:0 auto;">
+      <div class="screenshot-card large fade-up">
+        <img src="ma_collection.PNG" alt="Ma collection" loading="lazy" />
+        <div class="screenshot-label"><span></span>Ma collection — valeur, prix et P&amp;L en temps réel</div>
+      </div>
+      <div class="screenshot-card fade-up" style="transition-delay:0.1s">
+        <img src="explorer_bloc.PNG" alt="Explorer les blocs" loading="lazy" />
+        <div class="screenshot-label"><span></span>Explorer — toutes les extensions depuis 1999</div>
+      </div>
+      <div class="screenshot-card fade-up" style="transition-delay:0.2s">
+        <img src="explorer.PNG" alt="Explorer les cartes" loading="lazy" />
+        <div class="screenshot-label"><span></span>Détail d'une série avec progression</div>
+      </div>
+      <div class="screenshot-card fade-up" style="transition-delay:0.1s">
+        <img src="gallerie.PNG" alt="Galerie" loading="lazy" />
+        <div class="screenshot-label"><span></span>Galerie — présente ta collection en photos</div>
+      </div>
+      <div class="screenshot-card fade-up" style="transition-delay:0.2s">
+        <img src="wishlist.PNG" alt="Wishlist" loading="lazy" />
+        <div class="screenshot-label"><span></span>Souhaits — garde un œil sur les cartes qui te manquent</div>
+      </div>
+      <div class="screenshot-card fade-up" style="transition-delay:0.1s">
+        <img src="marché.PNG" alt="Marché" loading="lazy" />
+        <div class="screenshot-label"><span></span>Marché — vends et achète entre collectionneurs</div>
+      </div>
+      <div class="screenshot-card fade-up" style="transition-delay:0.2s">
+        <img src="collection_commune.PNG" alt="Collection commune" loading="lazy" />
+        <div class="screenshot-label"><span></span>Collection commune — fusionnez vos collections avec vos amis</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SCANNER VIDEO -->
+  <section class="scanner-section" id="scanner">
+    <div class="fade-up">
+      <div class="section-eyebrow" style="justify-content:center">Scanner IA</div>
+      <h2 class="section-title">Scanne. Identifie. Ajoute.</h2>
+      <p class="section-sub" style="margin:0 auto 50px">
+        En moins de 3 secondes, notre IA reconnaît ta carte et pré-remplit toutes les informations automatiquement.
+      </p>
+    </div>
+    <div class="video-wrapper fade-up">
+      <div class="video-overlay-badge">Scanner IA — Démo en direct</div>
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        poster="ma_collection.PNG"
+      >
+        <source src="scan-demo.mp4" type="video/mp4" />
+        <source src="scan-demo.webm" type="video/webm" />
+        Ton navigateur ne supporte pas la vidéo HTML5.
+      </video>
+    </div>
+    <p style="margin-top:20px;font-size:13px;color:var(--text-3)">
+      300 scans inclus dans le plan standard · Analyse en moins de 3 secondes
+    </p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- FLOW -->
+  <section id="flow">
+    <div class="fade-up">
+      <div class="section-eyebrow">Comment ça marche</div>
+      <h2 class="section-title">Collectionner en 4 étapes.</h2>
+      <p class="section-sub">Un flux pensé pour être efficace, de la première carte à la collection complète.</p>
+    </div>
+
+    <div class="flow-grid">
+      <div class="flow-card fade-up">
+        <div class="flow-connector"></div>
+        <div class="flow-num">01</div>
+        <div class="flow-title">Explorer</div>
+        <div class="flow-desc">Retrouve les séries FR et JP dans une base claire et complète. Vois d'un coup d'œil ce qui te manque.</div>
+      </div>
+      <div class="flow-card fade-up" style="transition-delay:0.1s">
+        <div class="flow-connector"></div>
+        <div class="flow-num">02</div>
+        <div class="flow-title">Scanner</div>
+        <div class="flow-desc">Prends une photo et ajoute ta carte en 3 secondes. 300 scans disponibles, prix mis à jour automatiquement.</div>
+      </div>
+      <div class="flow-card fade-up" style="transition-delay:0.2s">
+        <div class="flow-connector"></div>
+        <div class="flow-num">03</div>
+        <div class="flow-title">Partager</div>
+        <div class="flow-desc">Connecte ta collection avec celle de tes amis. Visualisez ensemble ce que vous possédez et ce qui manque.</div>
+      </div>
+      <div class="flow-card fade-up" style="transition-delay:0.3s">
+        <div class="flow-num">04</div>
+        <div class="flow-title">Suivre</div>
+        <div class="flow-desc">Garde un œil sur la valeur de ta collection, tes P&amp;L, et les cartes de ta wishlist. Tout au même endroit.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CTA FINAL -->
+  <section class="cta-section">
+    <div class="cta-card fade-up">
+      <div class="cta-title">La bêta prépare<br/>l'expérience complète.</div>
+      <p class="cta-sub">
+        Inscris-toi pour recevoir l'accès dès l'ouverture et suis les prochaines évolutions de l'application.
+        Les premiers inscrits auront des avantages exclusifs.
+      </p>
+
+      <div id="form-cta">
+        <div class="cta-form">
+          <input
+            type="email"
+            id="email-cta"
+            class="cta-input"
+            placeholder="dresseur@email.com"
+            required
+          />
+          <!-- Honeypot -->
+          <input type="text" name="website2" class="hp-field" tabindex="-1" autocomplete="off" />
+          <button class="btn-cta" onclick="submitWaitlist('cta')">
+            M'inscrire →
+          </button>
+        </div>
+        <div class="cta-note">Aucun spam. Tu peux te désinscrire à tout moment.</div>
+      </div>
+
+      <div class="toast-success" id="success-cta">
+        ✅ Inscription confirmée ! À très bientôt.
+      </div>
+      <div class="toast-error" id="error-cta"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="divider"></div>
+  <footer style="max-width:1200px;margin:0 auto;padding:32px 2rem;">
+    <div>
+      <span style="font-weight:600;color:var(--text-2)">
+        <span style="color:var(--blue)">Poké</span> Global <span style="color:var(--red)">Collect</span>
+      </span>
+      <span style="margin-left:16px">© 2025 — Tous droits réservés</span>
+    </div>
+    <div style="display:flex;gap:20px">
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+      <a href="mailto:contact@pokeglobalcollect.com">Contact</a>
+    </div>
+  </footer>
+
+  <script>
+    // ── Scroll animations ──────────────────────────────────────────────────
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible')
+          observer.unobserve(e.target)
+        }
+      })
+    }, { threshold: 0.1 })
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el))
+
+    // ── Waitlist submit ────────────────────────────────────────────────────
+    async function submitWaitlist(source) {
+      const emailInput = document.getElementById('email-' + source)
+      const email = emailInput.value.trim()
+      const honeypot = document.querySelector(source === 'hero' ? '[name="website"]' : '[name="website2"]')
+
+      const successEl = document.getElementById('success-' + source)
+      const errorEl = document.getElementById('error-' + source)
+      const formEl = document.getElementById('form-' + source)
+      const btn = source === 'hero'
+        ? document.querySelector('#form-hero .btn-waitlist')
+        : document.querySelector('#form-cta .btn-cta')
+
+      // Reset
+      successEl.style.display = 'none'
+      errorEl.style.display = 'none'
+
+      // Validation basique
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errorEl.textContent = 'Adresse email invalide.'
+        errorEl.style.display = 'block'
+        return
+      }
+
+      // Anti-bot
+      if (honeypot && honeypot.value) return
+
+      // Loading
+      btn.disabled = true
+      const originalText = btn.innerHTML
+      btn.innerHTML = '<span class="spinner"></span>'
+
+      try {
+        const res = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, website: honeypot?.value || '' })
+        })
+        const data = await res.json()
+
+        if (data.success) {
+          formEl.style.display = 'none'
+          successEl.style.display = 'block'
+        } else {
+          errorEl.textContent = data.error || 'Une erreur est survenue. Réessaie.'
+          errorEl.style.display = 'block'
+          btn.disabled = false
+          btn.innerHTML = originalText
+        }
+      } catch (e) {
+        errorEl.textContent = 'Erreur de connexion. Vérifie ta connexion internet.'
+        errorEl.style.display = 'block'
+        btn.disabled = false
+        btn.innerHTML = originalText
+      }
+    }
+
+    // Enter key support
+    document.getElementById('email-hero').addEventListener('keydown', e => {
+      if (e.key === 'Enter') submitWaitlist('hero')
+    })
+    document.getElementById('email-cta').addEventListener('keydown', e => {
+      if (e.key === 'Enter') submitWaitlist('cta')
+    })
+  </script>
+</body>
+</html>

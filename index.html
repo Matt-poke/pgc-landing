@@ -591,8 +591,21 @@
           </div>
           <div class="waitlist-note">Aucun spam — uniquement les nouvelles du lancement et l'accès bêta.</div>
           <div class="waitlist-access">
-            🕐 Accès bêta prévu prochainement
-          </div>
+  🕐 Accès bêta prévu prochainement
+</div>
+<a href="#early-access" style="
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  margin-top:10px;padding:10px 14px;
+  background:rgba(245,166,35,0.08);
+  border:0.5px solid rgba(245,166,35,0.3);
+  border-radius:10px;text-decoration:none;
+  font-size:12px;color:var(--gold);font-weight:500;
+  transition:background 0.2s;
+" onmouseover="this.style.background='rgba(245,166,35,0.15)'"
+   onmouseout="this.style.background='rgba(245,166,35,0.08)'"
+>
+  🏅 Voir les avantages Early Access →
+</a>
         </div>
 
         <div class="toast-success" id="success-hero">
@@ -721,7 +734,89 @@
     </p>
   </section>
 
-  <div class="divider"></div>
+
+<div class="divider"></div>
+
+<!-- EARLY ACCESS -->
+<section id="early-access" style="padding:100px 2rem;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="fade-up" style="text-align:center;margin-bottom:50px;">
+      <div class="section-eyebrow" style="justify-content:center;">Offre limitée</div>
+      <h2 class="section-title">Les avantages de l'Early Access.</h2>
+      <p class="section-sub" style="margin:0 auto;">
+        Réserve ta place maintenant et profite d'avantages exclusifs réservés aux premiers membres. 
+        <strong style="color:var(--gold)">Limité aux 500 premiers inscrits.</strong>
+      </p>
+    </div>
+
+    <!-- Compteur -->
+    <div class="fade-up" style="
+      text-align:center;margin-bottom:50px;
+      background:rgba(245,166,35,0.08);
+      border:0.5px solid rgba(245,166,35,0.3);
+      border-radius:16px;padding:24px;
+      max-width:400px;margin:0 auto 50px;
+    ">
+      <div style="font-size:11px;color:var(--gold);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">
+        Places restantes
+      </div>
+      <div style="font-family:'Orbitron',monospace;font-size:48px;font-weight:900;color:var(--gold);line-height:1;">
+        500
+      </div>
+      <div style="font-size:13px;color:var(--text-3);margin-top:4px;">sur 500 disponibles</div>
+    </div>
+
+    <!-- Avantages grid -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:50px;">
+
+      <div class="feature-card fade-up" style="border-color:rgba(245,166,35,0.3);">
+        <div class="feature-icon" style="background:rgba(245,166,35,0.12);border-color:rgba(245,166,35,0.3);font-size:24px;">🏅</div>
+        <div class="feature-title">Badge Fondateur permanent</div>
+        <div class="feature-desc">Un badge exclusif affiché sur ton profil, visible par tous les autres utilisateurs. Pour toujours.</div>
+      </div>
+
+      <div class="feature-card fade-up" style="border-color:rgba(245,166,35,0.3);transition-delay:0.1s;">
+        <div class="feature-icon" style="background:rgba(245,166,35,0.12);border-color:rgba(245,166,35,0.3);font-size:24px;">⭐</div>
+        <div class="feature-title">Numéro de membre exclusif</div>
+        <div class="feature-desc">Tu reçois un numéro séquentiel — "Dresseur #0001". Plus petit est ton numéro, plus tôt tu as rejoint l'aventure.</div>
+      </div>
+
+      <div class="feature-card fade-up" style="border-color:rgba(245,166,35,0.3);transition-delay:0.2s;">
+        <div class="feature-icon" style="background:rgba(245,166,35,0.12);border-color:rgba(245,166,35,0.3);font-size:24px;">💎</div>
+        <div class="feature-title">-50% sur le plan Premium</div>
+        <div class="feature-desc">Les 2 premiers mois du plan Premium à moitié prix. Profite de toutes les features sans contrainte dès le lancement.</div>
+      </div>
+
+      <div class="feature-card fade-up" style="border-color:rgba(245,166,35,0.3);transition-delay:0.3s;">
+        <div class="feature-icon" style="background:rgba(245,166,35,0.12);border-color:rgba(245,166,35,0.3);font-size:24px;">🚀</div>
+        <div class="feature-title">Accès prioritaire</div>
+        <div class="feature-desc">Tu seras parmi les tout premiers à accéder à l'app et à tester les nouvelles features avant tout le monde.</div>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div class="fade-up" style="text-align:center;">
+      <a href="#waitlist" style="
+        display:inline-flex;align-items:center;gap:8px;
+        background:var(--gold);color:#000;
+        font-size:15px;font-weight:700;
+        border-radius:10px;padding:14px 32px;
+        text-decoration:none;
+        box-shadow:0 4px 20px rgba(245,166,35,0.3);
+        transition:opacity 0.2s,transform 0.1s;
+      " onmouseover="this.style.opacity='0.9';this.style.transform='translateY(-1px)'"
+         onmouseout="this.style.opacity='1';this.style.transform='translateY(0)'">
+        Réserver ma place →
+      </a>
+      <p style="font-size:12px;color:var(--text-3);margin-top:12px;">
+        Aucun paiement requis maintenant · Juste ton email
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
 
   <!-- FLOW -->
   <section id="flow">

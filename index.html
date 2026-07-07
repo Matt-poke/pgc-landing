@@ -751,7 +751,7 @@
 
     <!-- Compteur -->
     <div class="fade-up" style="
-      text-align:center;margin-bottom:50px;
+      text-align:center;
       background:rgba(245,166,35,0.08);
       border:0.5px solid rgba(245,166,35,0.3);
       border-radius:16px;padding:24px;
@@ -760,8 +760,8 @@
       <div style="font-size:11px;color:var(--gold);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">
         Places restantes
       </div>
-      <div style="font-family:'Orbitron',monospace;font-size:48px;font-weight:900;color:var(--gold);line-height:1;">
-        500
+      <div id="waitlist-remaining" style="font-family:'Orbitron',monospace;font-size:48px;font-weight:900;color:var(--gold);line-height:1;">
+        —
       </div>
       <div style="font-size:13px;color:var(--text-3);margin-top:4px;">sur 500 disponibles</div>
     </div>
@@ -1068,6 +1068,21 @@
     document.getElementById('email-cta').addEventListener('keydown', e => {
       if (e.key === 'Enter') submitWaitlist('cta')
     })
+
+     // Compteur waitlist dynamique
+async function loadWaitlistCount() {
+  try {
+    const res = await fetch('/api/waitlist-count')
+    const { count } = await res.json()
+    const remaining = Math.max(0, 500 - count)
+    document.getElementById('waitlist-remaining').textContent = remaining
+  } catch (e) {
+    document.getElementById('waitlist-remaining').textContent = '500'
+  }
+}
+loadWaitlistCount()
+
   </script>
+
 </body>
 </html>

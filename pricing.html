@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tarifs — Poké Global Collect</title>
+  <meta name="description" content="Aide-nous à définir nos tarifs en répondant à notre sondage. Ton avis compte !" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #1E90FF; --red: #CC2200; --gold: #F5A623;
+      --bg: #060810; --surface: rgba(14,18,32,0.92); --surface2: rgba(20,26,44,0.85);
+      --border: rgba(30,144,255,0.18); --text: #F0F4FF; --text-2: #8A9BC0; --text-3: #4A5880;
+      --green: #2ECC71; --radius: 12px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 70% 60%, rgba(30,144,255,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 30% 40%, rgba(204,34,0,0.05) 0%, transparent 55%),
+        url('terre.jpg') center/cover no-repeat;
+      z-index: -2;
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background: linear-gradient(to bottom, rgba(6,8,16,0.88) 0%, rgba(6,8,16,0.75) 40%, rgba(6,8,16,0.92) 100%);
+      z-index: -1;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 60px; background: rgba(6,8,16,0.85);
+      backdrop-filter: blur(16px); border-bottom: 0.5px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 17px;
+      text-decoration: none;
+    }
+    .nav-logo img { width: 32px; height: 32px; }
+    .btn-back {
+      background: rgba(30,144,255,0.1); color: var(--blue);
+      border: 0.5px solid rgba(30,144,255,0.3); border-radius: 8px;
+      padding: 8px 16px; font-size: 13px; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: background 0.2s;
+    }
+    .btn-back:hover { background: rgba(30,144,255,0.2); }
+
+    /* MAIN */
+    main {
+      max-width: 860px; margin: 0 auto;
+      padding: 100px 2rem 80px;
+    }
+
+    /* HERO */
+    .page-hero { text-align: center; margin-bottom: 60px; }
+    .page-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(245,166,35,0.1); border: 0.5px solid rgba(245,166,35,0.3);
+      border-radius: 40px; padding: 6px 16px;
+      font-size: 12px; color: var(--gold); font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .page-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(28px, 4vw, 48px); font-weight: 900;
+      line-height: 1.15; margin-bottom: 16px;
+    }
+    .page-sub {
+      font-size: 16px; color: var(--text-2); line-height: 1.7;
+      max-width: 560px; margin: 0 auto;
+    }
+
+    /* PLANS PREVIEW */
+    .plans-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px; margin-bottom: 60px;
+    }
+    .plan-card {
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+      backdrop-filter: blur(12px); position: relative;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .plan-card.featured {
+      border-color: rgba(30,144,255,0.5);
+      box-shadow: 0 0 30px rgba(30,144,255,0.1);
+    }
+    .plan-badge {
+      position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+      background: var(--blue); color: #fff;
+      font-size: 10px; font-weight: 700; padding: 3px 12px;
+      border-radius: 20px; white-space: nowrap;
+    }
+    .plan-name {
+      font-family: 'Orbitron', monospace; font-size: 14px; font-weight: 700;
+      color: var(--text-2); text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .plan-price {
+      font-family: 'Orbitron', monospace; font-size: 28px; font-weight: 900;
+      color: var(--text); margin-bottom: 16px;
+    }
+    .plan-price span { font-size: 13px; color: var(--text-3); font-weight: 400; font-family: 'Inter', sans-serif; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .plan-features li {
+      font-size: 12px; color: var(--text-2);
+      display: flex; align-items: flex-start; gap: 8px; line-height: 1.5;
+    }
+    .plan-features li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .plan-features li.no::before { content: '✗'; color: var(--text-3); }
+    .plan-features li.no { color: var(--text-3); }
+
+    /* SONDAGE */
+    .survey-card {
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: 16px; padding: 40px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    }
+    .survey-title {
+      font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .survey-sub { font-size: 14px; color: var(--text-2); margin-bottom: 36px; line-height: 1.6; }
+
+    .question-block { margin-bottom: 32px; }
+    .question-num {
+      font-size: 11px; font-weight: 700; color: var(--gold);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;
+    }
+    .question-text {
+      font-size: 16px; font-weight: 600; color: var(--text);
+      margin-bottom: 16px; line-height: 1.5;
+    }
+    .options-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+    .option-btn {
+      padding: 12px 16px; border-radius: 10px;
+      background: var(--surface2); border: 0.5px solid var(--border);
+      color: var(--text-2); font-size: 13px; font-weight: 500;
+      cursor: pointer; text-align: center;
+      transition: all 0.15s; font-family: 'Inter', sans-serif;
+    }
+    .option-btn:hover { border-color: rgba(30,144,255,0.4); color: var(--text); }
+    .option-btn.selected {
+      background: rgba(30,144,255,0.15);
+      border-color: var(--blue); color: var(--blue);
+      box-shadow: 0 0 12px rgba(30,144,255,0.15);
+    }
+
+    .divider-q { height: 0.5px; background: var(--border); margin: 32px 0; }
+
+    .btn-submit {
+      width: 100%; height: 52px;
+      background: var(--gold); color: #000;
+      font-size: 15px; font-weight: 700;
+      border: none; border-radius: 10px; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: opacity 0.2s, transform 0.1s;
+      box-shadow: 0 4px 20px rgba(245,166,35,0.3);
+      margin-top: 8px;
+    }
+    .btn-submit:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .progress-bar {
+      height: 4px; background: rgba(255,255,255,0.06);
+      border-radius: 2px; margin-bottom: 32px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--gold));
+      transition: width 0.4s ease;
+    }
+
+    .toast-success {
+      display: none; background: rgba(46,204,113,0.12);
+      border: 0.5px solid rgba(46,204,113,0.4);
+      border-radius: 12px; padding: 24px;
+      text-align: center;
+    }
+    .toast-success h3 {
+      font-size: 18px; font-weight: 700; color: var(--green);
+      margin-bottom: 8px;
+    }
+    .toast-success p { font-size: 14px; color: var(--text-2); }
+
+    .toast-error {
+      display: none; background: rgba(231,76,60,0.12);
+      border: 0.5px solid rgba(231,76,60,0.4);
+      border-radius: 10px; padding: 14px;
+      text-align: center; color: #E74C3C; font-size: 13px;
+      margin-top: 12px;
+    }
+
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: #000; border-radius: 50%;
+      animation: spin 0.7s linear infinite; display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* FOOTER */
+    footer {
+      border-top: 0.5px solid var(--border);
+      padding: 32px 2rem; margin-top: 60px;
+      display: flex; justify-content: space-between; align-items: center;
+      max-width: 860px; margin: 60px auto 0;
+      font-size: 13px; color: var(--text-3);
+    }
+    footer a { color: var(--text-3); text-decoration: none; }
+    footer a:hover { color: var(--text-2); }
+
+    @media (max-width: 700px) {
+      .plans-grid { grid-template-columns: 1fr; }
+      .survey-card { padding: 24px; }
+      .options-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="nav-logo">
+      <img src="pgc-logo.png" alt="PGC" />
+      <span>
+        <span style="color:#1E90FF">Poké</span>
+        <span style="color:#fff"> Global </span>
+        <span style="color:#CC2200">Collect</span>
+      </span>
+    </a>
+    <a href="/" class="btn-back">← Retour à l'accueil</a>
+  </nav>
+
+  <main>
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="page-eyebrow">💬 Ton avis compte</div>
+      <h1 class="page-title">Aide-nous à fixer<br/>nos tarifs.</h1>
+      <p class="page-sub">
+        Avant de lancer officiellement, on veut s'assurer que nos prix reflètent la vraie valeur que tu en retires.
+        2 minutes, 4 questions.
+      </p>
+    </div>
+
+    <!-- PLANS PREVIEW -->
+    <div class="plans-grid">
+      <div class="plan-card">
+        <div class="plan-name">Gratuit</div>
+        <div class="plan-price">0€ <span>/ mois</span></div>
+        <ul class="plan-features">
+          <li>Collection jusqu'à 50 cartes</li>
+          <li>Explorer FR / EN</li>
+          <li>Prix basiques des cartes</li>
+          <li>Wishlist (20 cartes)</li>
+          <li class="no">Scanner IA</li>
+          <li class="no">Marché</li>
+          <li class="no">Explorer JP</li>
+        </ul>
+      </div>
+
+      <div class="plan-card featured">
+        <div class="plan-badge">⭐ Recommandé</div>
+        <div class="plan-name">Intermédiaire</div>
+        <div class="plan-price">2-5€ <span>/ mois</span></div>
+        <ul class="plan-features">
+          <li>Collection illimitée</li>
+          <li>Explorer FR / EN complet</li>
+          <li>Prix temps réel TCGPlayer + CardMarket</li>
+          <li>Wishlist illimitée</li>
+          <li>Galerie photo</li>
+          <li>Scanner IA (100 scans/mois)</li>
+          <li>Collection commune (1 ami)</li>
+          <li class="no">Marché</li>
+          <li class="no">Explorer JP</li>
+        </ul>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-name">Premium</div>
+        <div class="plan-price">4-8€ <span>/ mois</span></div>
+        <ul class="plan-features">
+          <li>Tout le plan intermédiaire</li>
+          <li>Explorer JP</li>
+          <li>Scanner illimité</li>
+          <li>Marché entre collectionneurs</li>
+          <li>Collection commune illimitée</li>
+          <li>Historique des prix</li>
+          <li>Support prioritaire</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SONDAGE -->
+    <div class="survey-card">
+      <div class="survey-title">Le sondage</div>
+      <p class="survey-sub">4 questions pour nous aider à trouver le juste prix. Tes réponses sont anonymes.</p>
+
+      <!-- Barre de progression -->
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress" style="width:0%"></div>
+      </div>
+
+      <div id="survey-form">
+        <!-- Q1 -->
+        <div class="question-block">
+          <div class="question-num">Question 1 / 4</div>
+          <div class="question-text">Le plan gratuit inclut 50 cartes, l'Explorer FR/EN et les prix basiques. C'est suffisant pour commencer ?</div>
+          <div class="options-grid" id="q1-options">
+            <button class="option-btn" onclick="selectOption('q1', 'Oui, parfait pour débuter', this)">Oui, parfait pour débuter</button>
+            <button class="option-btn" onclick="selectOption('q1', 'Non, j\'aurais besoin de plus', this)">Non, j'aurais besoin de plus</button>
+            <button class="option-btn" onclick="selectOption('q1', 'Je passerai directement au payant', this)">Je passerai directement au payant</button>
+          </div>
+        </div>
+
+        <div class="divider-q"></div>
+
+        <!-- Q2 -->
+        <div class="question-block">
+          <div class="question-num">Question 2 / 4</div>
+          <div class="question-text">Collection illimitée + scanner 100 scans/mois + prix temps réel + galerie + collection commune. Combien paierais-tu ?</div>
+          <div class="options-grid" id="q2-options">
+            <button class="option-btn" onclick="selectOption('q2', '2€/mois', this)">2€ / mois</button>
+            <button class="option-btn" onclick="selectOption('q2', '3€/mois', this)">3€ / mois</button>
+            <button class="option-btn" onclick="selectOption('q2', '4€/mois', this)">4€ / mois</button>
+            <button class="option-btn" onclick="selectOption('q2', '5€/mois', this)">5€ / mois</button>
+            <button class="option-btn" onclick="selectOption('q2', 'Je resterais gratuit', this)">Je resterais gratuit</button>
+          </div>
+        </div>
+
+        <div class="divider-q"></div>
+
+        <!-- Q3 -->
+        <div class="question-block">
+          <div class="question-num">Question 3 / 4</div>
+          <div class="question-text">Tout le plan intermédiaire + Explorer JP + marché entre collectionneurs + scanner illimité + historique des prix. Combien paierais-tu ?</div>
+          <div class="options-grid" id="q3-options">
+            <button class="option-btn" onclick="selectOption('q3', '4€/mois', this)">4€ / mois</button>
+            <button class="option-btn" onclick="selectOption('q3', '5€/mois', this)">5€ / mois</button>
+            <button class="option-btn" onclick="selectOption('q3', '6€/mois', this)">6€ / mois</button>
+            <button class="option-btn" onclick="selectOption('q3', '8€/mois', this)">8€ / mois</button>
+            <button class="option-btn" onclick="selectOption('q3', 'Je resterais sur l\'intermédiaire', this)">Je resterais intermédiaire</button>
+          </div>
+        </div>
+
+        <div class="divider-q"></div>
+
+        <!-- Q4 -->
+        <div class="question-block">
+          <div class="question-num">Question 4 / 4</div>
+          <div class="question-text">Quelle fonctionnalité te ferait passer au plan payant en premier ?</div>
+          <div class="options-grid" id="q4-options">
+            <button class="option-btn" onclick="selectOption('q4', 'Scanner IA', this)">📸 Scanner IA</button>
+            <button class="option-btn" onclick="selectOption('q4', 'Marché entre collectionneurs', this)">🏪 Marché</button>
+            <button class="option-btn" onclick="selectOption('q4', 'Explorer JP', this)">🇯🇵 Explorer JP</button>
+            <button class="option-btn" onclick="selectOption('q4', 'Collection illimitée', this)">📦 Collection illimitée</button>
+            <button class="option-btn" onclick="selectOption('q4', 'Historique des prix', this)">📈 Historique des prix</button>
+          </div>
+        </div>
+
+        <button class="btn-submit" id="btn-submit" onclick="submitSurvey()" disabled>
+          Envoyer mes réponses →
+        </button>
+        <div class="toast-error" id="survey-error"></div>
+      </div>
+
+      <div class="toast-success" id="survey-success">
+        <h3>✅ Merci pour ton avis !</h3>
+        <p>Tes réponses nous aident à construire quelque chose qui te correspond vraiment.<br/>
+        Tu seras parmi les premiers prévenus au lancement.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>
+      <span style="color:#1E90FF">Poké</span> Global <span style="color:#CC2200">Collect</span>
+      · © 2025
+    </span>
+    <a href="/">← Retour à l'accueil</a>
+  </footer>
+
+  <script>
+    const answers = { q1: null, q2: null, q3: null, q4: null }
+
+    function selectOption(question, value, btn) {
+      answers[question] = value
+
+      // Désélectionne tous les boutons de cette question
+      document.querySelectorAll(`#${question}-options .option-btn`).forEach(b => b.classList.remove('selected'))
+      btn.classList.add('selected')
+
+      // Met à jour la progression
+      const answered = Object.values(answers).filter(Boolean).length
+      document.getElementById('progress').style.width = (answered / 4 * 100) + '%'
+
+      // Active le bouton submit si tout est répondu
+      const allAnswered = Object.values(answers).every(Boolean)
+      document.getElementById('btn-submit').disabled = !allAnswered
+    }
+
+    async function submitSurvey() {
+      const errorEl = document.getElementById('survey-error')
+      const btn = document.getElementById('btn-submit')
+      errorEl.style.display = 'none'
+
+      if (!answers.q1 || !answers.q2 || !answers.q3 || !answers.q4) {
+        errorEl.textContent = 'Merci de répondre à toutes les questions.'
+        errorEl.style.display = 'block'
+        return
+      }
+
+      btn.disabled = true
+      btn.innerHTML = '<span class="spinner"></span> Envoi en cours...'
+
+      try {
+        const res = await fetch('/api/survey', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ q1: answers.q1, q2: answers.q2, q3: answers.q3, q4: answers.q4 })
+        })
+        const data = await res.json()
+
+        if (data.success) {
+          document.getElementById('survey-form').style.display = 'none'
+          document.getElementById('survey-success').style.display = 'block'
+        } else {
+          errorEl.textContent = data.error || 'Une erreur est survenue.'
+          errorEl.style.display = 'block'
+          btn.disabled = false
+          btn.innerHTML = 'Envoyer mes réponses →'
+        }
+      } catch (e) {
+        errorEl.textContent = 'Erreur de connexion. Réessaie.'
+        errorEl.style.display = 'block'
+        btn.disabled = false
+        btn.innerHTML = 'Envoyer mes réponses →'
+      }
+    }
+  </script>
+</body>
+</html>

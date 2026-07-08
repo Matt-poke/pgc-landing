@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Politique de confidentialité — Poké Global Collect</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #1E90FF; --red: #CC2200; --gold: #F5A623;
+      --bg: #060810; --surface: rgba(14,18,32,0.92); --surface2: rgba(20,26,44,0.85);
+      --border: rgba(30,144,255,0.18); --text: #F0F4FF; --text-2: #8A9BC0; --text-3: #4A5880;
+      --green: #2ECC71; --radius: 12px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 70% 60%, rgba(30,144,255,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 30% 40%, rgba(204,34,0,0.05) 0%, transparent 55%),
+        url('terre.jpg') center/cover no-repeat;
+      z-index: -2;
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background: linear-gradient(to bottom, rgba(6,8,16,0.88) 0%, rgba(6,8,16,0.75) 40%, rgba(6,8,16,0.92) 100%);
+      z-index: -1;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 60px; background: rgba(6,8,16,0.85);
+      backdrop-filter: blur(16px); border-bottom: 0.5px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: 17px; text-decoration: none;
+    }
+    .nav-logo img { width: 32px; height: 32px; }
+    .btn-back {
+      background: rgba(30,144,255,0.1); color: var(--blue);
+      border: 0.5px solid rgba(30,144,255,0.3); border-radius: 8px;
+      padding: 8px 16px; font-size: 13px; font-weight: 500;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+      transition: background 0.2s;
+    }
+    .btn-back:hover { background: rgba(30,144,255,0.2); }
+
+    main {
+      max-width: 800px; margin: 0 auto;
+      padding: 100px 2rem 80px;
+    }
+
+    .page-header { margin-bottom: 48px; }
+    .page-tag {
+      display: inline-block;
+      background: rgba(30,144,255,0.1); border: 0.5px solid rgba(30,144,255,0.3);
+      border-radius: 20px; padding: 4px 14px;
+      font-size: 11px; color: var(--blue); font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+    .page-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(24px, 3.5vw, 38px); font-weight: 700;
+      margin-bottom: 12px; line-height: 1.2;
+    }
+    .page-date { font-size: 13px; color: var(--text-3); }
+
+    .toc {
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+      margin-bottom: 48px; backdrop-filter: blur(12px);
+    }
+    .toc-title {
+      font-size: 13px; font-weight: 700; color: var(--text-2);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+    .toc ol { padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
+    .toc a {
+      color: var(--blue); text-decoration: none; font-size: 14px;
+      transition: color 0.2s;
+    }
+    .toc a:hover { color: var(--text); }
+
+    .section-block {
+      margin-bottom: 48px; padding-bottom: 48px;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .section-block:last-child { border-bottom: none; }
+
+    .section-num {
+      font-size: 11px; font-weight: 700; color: var(--blue);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 20px; font-weight: 700; color: var(--text);
+      margin-bottom: 16px; line-height: 1.3;
+    }
+    p {
+      font-size: 14px; color: var(--text-2); line-height: 1.8;
+      margin-bottom: 14px;
+    }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--text); font-weight: 600; }
+
+    .data-table {
+      width: 100%; border-collapse: collapse;
+      margin: 16px 0; font-size: 13px;
+    }
+    .data-table th {
+      background: rgba(30,144,255,0.1);
+      color: var(--blue); font-weight: 600;
+      padding: 10px 14px; text-align: left;
+      border: 0.5px solid var(--border);
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .data-table td {
+      padding: 10px 14px; color: var(--text-2);
+      border: 0.5px solid var(--border);
+      vertical-align: top; line-height: 1.6;
+    }
+    .data-table tr:hover td { background: rgba(30,144,255,0.04); }
+
+    .rights-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px; margin: 16px 0;
+    }
+    .right-card {
+      background: var(--surface2); border: 0.5px solid var(--border);
+      border-radius: 10px; padding: 16px;
+    }
+    .right-card .right-title {
+      font-size: 13px; font-weight: 600; color: var(--text);
+      margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+    }
+    .right-card p { font-size: 12px; margin-bottom: 0; }
+
+    .highlight-box {
+      background: rgba(30,144,255,0.08);
+      border: 0.5px solid rgba(30,144,255,0.25);
+      border-radius: 10px; padding: 16px 20px;
+      margin: 16px 0;
+    }
+    .highlight-box p { margin-bottom: 0; }
+
+    .contact-box {
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+      text-align: center; margin-top: 48px;
+    }
+    .contact-box h3 {
+      font-size: 18px; font-weight: 700; margin-bottom: 8px;
+    }
+    .contact-box p { margin-bottom: 12px; }
+    .contact-box a {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(30,144,255,0.12); border: 0.5px solid rgba(30,144,255,0.3);
+      color: var(--blue); border-radius: 8px; padding: 10px 20px;
+      text-decoration: none; font-size: 14px; font-weight: 500;
+      transition: background 0.2s;
+    }
+    .contact-box a:hover { background: rgba(30,144,255,0.2); }
+
+    footer {
+      border-top: 0.5px solid var(--border);
+      padding: 32px 2rem; margin-top: 60px;
+      display: flex; justify-content: space-between; align-items: center;
+      max-width: 800px; margin: 60px auto 0;
+      font-size: 13px; color: var(--text-3);
+    }
+    footer a { color: var(--text-3); text-decoration: none; }
+    footer a:hover { color: var(--text-2); }
+
+    @media (max-width: 600px) {
+      .rights-grid { grid-template-columns: 1fr; }
+      .data-table { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">
+      <img src="pgc-logo.png" alt="PGC" />
+      <span>
+        <span style="color:#1E90FF">Poké</span>
+        <span style="color:#fff"> Global </span>
+        <span style="color:#CC2200">Collect</span>
+      </span>
+    </a>
+    <a href="/" class="btn-back">← Retour à l'accueil</a>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <div class="page-tag">RGPD</div>
+      <h1 class="page-title">Politique de<br/>confidentialité</h1>
+      <p class="page-date">Dernière mise à jour : juillet 2025</p>
+    </div>
+
+    <!-- Table des matières -->
+    <div class="toc">
+      <div class="toc-title">Sommaire</div>
+      <ol>
+        <li><a href="#responsable">Responsable du traitement</a></li>
+        <li><a href="#donnees">Données collectées</a></li>
+        <li><a href="#finalites">Finalités et bases légales</a></li>
+        <li><a href="#conservation">Durée de conservation</a></li>
+        <li><a href="#partage">Partage des données</a></li>
+        <li><a href="#droits">Vos droits</a></li>
+        <li><a href="#cookies">Cookies et traceurs</a></li>
+        <li><a href="#securite">Sécurité des données</a></li>
+        <li><a href="#modifications">Modifications de la politique</a></li>
+        <li><a href="#contact">Nous contacter</a></li>
+      </ol>
+    </div>
+
+    <!-- 1. Responsable -->
+    <div class="section-block" id="responsable">
+      <div class="section-num">Article 1</div>
+      <h2 class="section-title">Responsable du traitement</h2>
+      <p>
+        Le responsable du traitement des données personnelles collectées sur le site
+        <strong>pgc-landing.vercel.app</strong> est :
+      </p>
+      <p>
+        <strong>DUCHENE Matthias</strong><br/>
+        Particulier — projet non commercial en phase bêta<br/>
+        Email : <a href="mailto:pokeglobalcollect@gmail.com" style="color:var(--blue)">pokeglobalcollect@gmail.com</a>
+      </p>
+      <p>
+        Pour toute question relative à la présente politique de confidentialité ou à l'exercice de vos droits,
+        vous pouvez nous contacter à l'adresse email ci-dessus.
+      </p>
+    </div>
+
+    <!-- 2. Données collectées -->
+    <div class="section-block" id="donnees">
+      <div class="section-num">Article 2</div>
+      <h2 class="section-title">Données collectées</h2>
+      <p>Dans le cadre de l'utilisation de ce site, nous collectons les données suivantes :</p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Donnée</th>
+            <th>Source</th>
+            <th>Obligatoire</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Adresse email</strong></td>
+            <td>Formulaire d'inscription à la liste d'attente</td>
+            <td>Oui</td>
+          </tr>
+          <tr>
+            <td><strong>Réponses au sondage</strong> (anonymes)</td>
+            <td>Formulaire de sondage tarifaire</td>
+            <td>Non</td>
+          </tr>
+          <tr>
+            <td><strong>Adresse IP</strong></td>
+            <td>Logs serveur automatiques (Vercel)</td>
+            <td>Automatique</td>
+          </tr>
+          <tr>
+            <td><strong>Données de navigation</strong></td>
+            <td>Logs serveur (pages visitées, navigateur, OS)</td>
+            <td>Automatique</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box">
+        <p>
+          ℹ️ Nous ne collectons <strong>aucune donnée sensible</strong> au sens du RGPD (origine ethnique,
+          opinions politiques, données de santé, etc.) et nous ne créons <strong>aucun profil publicitaire</strong>.
+        </p>
+      </div>
+    </div>
+
+    <!-- 3. Finalités -->
+    <div class="section-block" id="finalites">
+      <div class="section-num">Article 3</div>
+      <h2 class="section-title">Finalités et bases légales</h2>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Finalité</th>
+            <th>Données concernées</th>
+            <th>Base légale (RGPD)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Vous informer du lancement de l'application et vous envoyer votre invitation bêta</td>
+            <td>Email</td>
+            <td>Consentement explicite (Art. 6.1.a)</td>
+          </tr>
+          <tr>
+            <td>Définir la politique tarifaire de l'application</td>
+            <td>Réponses au sondage (anonymes)</td>
+            <td>Intérêt légitime (Art. 6.1.f)</td>
+          </tr>
+          <tr>
+            <td>Sécurité et prévention des abus (rate limiting)</td>
+            <td>Adresse IP</td>
+            <td>Intérêt légitime (Art. 6.1.f)</td>
+          </tr>
+          <tr>
+            <td>Statistiques d'utilisation anonymes</td>
+            <td>Données de navigation</td>
+            <td>Intérêt légitime (Art. 6.1.f)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 4. Conservation -->
+    <div class="section-block" id="conservation">
+      <div class="section-num">Article 4</div>
+      <h2 class="section-title">Durée de conservation</h2>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Donnée</th>
+            <th>Durée de conservation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Adresse email (liste d'attente)</strong></td>
+            <td>Jusqu'au lancement de l'application ou jusqu'à demande de suppression, et au maximum 2 ans</td>
+          </tr>
+          <tr>
+            <td><strong>Réponses au sondage</strong></td>
+            <td>2 ans maximum, anonymisées après analyse</td>
+          </tr>
+          <tr>
+            <td><strong>Logs serveur (IP, navigation)</strong></td>
+            <td>12 mois maximum (obligation légale)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        À l'issue de ces délais, vos données sont <strong>supprimées définitivement</strong> ou anonymisées
+        de façon à ne plus permettre votre identification.
+      </p>
+    </div>
+
+    <!-- 5. Partage -->
+    <div class="section-block" id="partage">
+      <div class="section-num">Article 5</div>
+      <h2 class="section-title">Partage des données</h2>
+      <p>
+        Nous ne vendons, ne louons et ne partageons <strong>jamais vos données personnelles</strong>
+        à des tiers à des fins commerciales ou publicitaires.
+      </p>
+      <p>
+        Vos données sont uniquement transmises aux sous-traitants techniques nécessaires au fonctionnement
+        du site, dans le strict respect du RGPD :
+      </p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Sous-traitant</th>
+            <th>Rôle</th>
+            <th>Localisation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Vercel Inc.</strong></td>
+            <td>Hébergement du site et des fonctions serverless</td>
+            <td>États-Unis (transfert encadré par clauses contractuelles types)</td>
+          </tr>
+          <tr>
+            <td><strong>Supabase Inc.</strong></td>
+            <td>Stockage sécurisé des adresses email et réponses au sondage</td>
+            <td>Singapour / UE selon la région choisie</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box">
+        <p>
+          ℹ️ Les transferts hors UE vers Vercel sont encadrés par les <strong>clauses contractuelles types</strong>
+          approuvées par la Commission européenne, conformément à l'article 46 du RGPD.
+        </p>
+      </div>
+    </div>
+
+    <!-- 6. Droits -->
+    <div class="section-block" id="droits">
+      <div class="section-num">Article 6</div>
+      <h2 class="section-title">Vos droits</h2>
+      <p>
+        Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique
+        et Libertés, vous disposez des droits suivants concernant vos données personnelles :
+      </p>
+
+      <div class="rights-grid">
+        <div class="right-card">
+          <div class="right-title">🔍 Droit d'accès</div>
+          <p>Obtenir une copie de vos données personnelles que nous détenons.</p>
+        </div>
+        <div class="right-card">
+          <div class="right-title">✏️ Droit de rectification</div>
+          <p>Corriger vos données si elles sont inexactes ou incomplètes.</p>
+        </div>
+        <div class="right-card">
+          <div class="right-title">🗑️ Droit à l'effacement</div>
+          <p>Demander la suppression de vos données ("droit à l'oubli").</p>
+        </div>
+        <div class="right-card">
+          <div class="right-title">🚫 Droit d'opposition</div>
+          <p>Vous opposer au traitement de vos données à des fins de prospection.</p>
+        </div>
+        <div class="right-card">
+          <div class="right-title">⏸️ Droit à la limitation</div>
+          <p>Demander la suspension temporaire du traitement de vos données.</p>
+        </div>
+        <div class="right-card">
+          <div class="right-title">📦 Droit à la portabilité</div>
+          <p>Recevoir vos données dans un format structuré et lisible par machine.</p>
+        </div>
+      </div>
+
+      <p style="margin-top:16px">
+        Pour exercer ces droits, contactez-nous à :
+        <a href="mailto:pokeglobalcollect@gmail.com" style="color:var(--blue)">pokeglobalcollect@gmail.com</a>
+      </p>
+      <p>
+        Nous nous engageons à répondre à votre demande dans un délai maximum de <strong>30 jours</strong>.
+      </p>
+      <p>
+        Si vous estimez que vos droits ne sont pas respectés, vous pouvez introduire une réclamation
+        auprès de la <strong>CNIL</strong> (Commission Nationale de l'Informatique et des Libertés) :
+        <a href="https://www.cnil.fr/fr/plaintes" target="_blank" style="color:var(--blue)">cnil.fr/fr/plaintes</a>
+      </p>
+    </div>
+
+    <!-- 7. Cookies -->
+    <div class="section-block" id="cookies">
+      <div class="section-num">Article 7</div>
+      <h2 class="section-title">Cookies et traceurs</h2>
+      <p>
+        Ce site <strong>n'utilise aucun cookie</strong> de tracking, publicitaire ou analytique.
+        Aucun cookie n'est déposé sur votre navigateur lors de votre visite.
+      </p>
+      <p>
+        Les seuls cookies éventuellement présents sont des cookies <strong>strictement nécessaires</strong>
+        au fonctionnement technique du site (session, sécurité), qui ne nécessitent pas votre consentement
+        conformément à l'article 82 de la loi Informatique et Libertés.
+      </p>
+    </div>
+
+    <!-- 8. Sécurité -->
+    <div class="section-block" id="securite">
+      <div class="section-num">Article 8</div>
+      <h2 class="section-title">Sécurité des données</h2>
+      <p>
+        Nous mettons en œuvre des mesures techniques et organisationnelles appropriées pour protéger
+        vos données personnelles contre tout accès non autorisé, perte ou destruction :
+      </p>
+      <p>
+        <strong>Chiffrement :</strong> toutes les communications entre votre navigateur et nos serveurs
+        sont chiffrées via HTTPS/TLS.<br/>
+        <strong>Accès restreint :</strong> vos données sont stockées dans une base de données sécurisée
+        avec des politiques d'accès strictes (Row Level Security).<br/>
+        <strong>Clés d'API sécurisées :</strong> les clés d'accès aux services tiers ne sont jamais
+        exposées côté client.<br/>
+        <strong>Protection anti-spam :</strong> des mesures de rate limiting et de validation sont en
+        place pour prévenir les abus.
+      </p>
+    </div>
+
+    <!-- 9. Modifications -->
+    <div class="section-block" id="modifications">
+      <div class="section-num">Article 9</div>
+      <h2 class="section-title">Modifications de la politique</h2>
+      <p>
+        Nous nous réservons le droit de modifier la présente politique de confidentialité à tout moment,
+        notamment pour nous conformer à d'éventuelles évolutions réglementaires.
+      </p>
+      <p>
+        En cas de modification substantielle, nous vous en informerons par email si vous êtes inscrit
+        sur notre liste d'attente. La date de dernière mise à jour est indiquée en haut de ce document.
+      </p>
+      <p>
+        Nous vous encourageons à consulter régulièrement cette page pour prendre connaissance des
+        éventuelles mises à jour.
+      </p>
+    </div>
+
+    <!-- 10. Contact -->
+    <div class="section-block" id="contact">
+      <div class="section-num">Article 10</div>
+      <h2 class="section-title">Nous contacter</h2>
+      <p>
+        Pour toute question relative à cette politique de confidentialité ou pour exercer vos droits,
+        contactez-nous à l'adresse suivante :
+      </p>
+    </div>
+
+    <div class="contact-box">
+      <h3>Une question sur vos données ?</h3>
+      <p>Notre responsable de traitement vous répondra dans les 30 jours.</p>
+      <a href="mailto:pokeglobalcollect@gmail.com">
+        ✉️ pokeglobalcollect@gmail.com
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    <span>
+      <span style="color:#1E90FF">Poké</span> Global <span style="color:#CC2200">Collect</span>
+      · © 2025
+    </span>
+    <div style="display:flex;gap:20px">
+      <a href="/#mentions-legales">Mentions légales</a>
+      <a href="/">← Accueil</a>
+    </div>
+  </footer>
+
+</body>
+</html>
